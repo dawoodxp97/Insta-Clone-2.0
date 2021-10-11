@@ -1,0 +1,86 @@
+.signin {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eeeff3;
+}
+.signin_card {
+  background-color: #ffffff;
+  height: 80%;
+  width: 90%;
+  border-radius: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  display: flex;
+}
+.card_1 {
+  flex: 0.5;
+}
+.card_1 > img {
+  height: 95%;
+  width: 95%;
+}
+.card_2 {
+  flex: 0.5;
+  display: flex;
+  flex-direction: column;
+}
+.card_2_logo {
+  flex: 0.1;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.card_2_logo > img {
+  height: 100%;
+  width: 5rem;
+}
+.card_2_form {
+  flex: 0.9;
+  display: flex;
+  justify-content: center;
+}
+.card_2_form > form {
+  height: 90%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 1rem;
+  letter-spacing: 1px;
+  filter: drop-shadow(1px 1px 2px rgb(0 0 0/0.4));
+}
+.card_2_form > form > h1 {
+  color: #240453;
+}
+.form_input {
+  border: none;
+  outline: none;
+  height: 1.5rem;
+  width: 17rem;
+  margin-left: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.3rem;
+  background-color: #eeeff3;
+}
+.form_input:focus {
+  border-left: 2px solid #941440 !important;
+}
+.card_2_form > form > button {
+  cursor: pointer;
+  border: none;
+  height: 1.5rem;
+  font-weight: bold;
+  border-radius: 10px;
+  background: rgb(254, 109, 63);
+  background: linear-gradient(
+    90deg,
+    rgba(254, 109, 63, 1) 0%,
+    rgba(254, 31, 141, 1) 39%,
+    rgba(219, 40, 174, 1) 92%
+  );
+  color: #ffffff;
+  filter: drop-shadow(1px 1px 2px rgb(0 0 0/0.4));
+}

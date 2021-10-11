@@ -1,0 +1,20 @@
+input[type="file"] {
+  display: none;
+}
+.upload_btn {
+  cursor: pointer;
+  margin: 0.3rem;
+  padding: 0.2rem;
+  height: 1.5rem;
+  letter-spacing: 1px;
+  border-radius: 10px;
+  background: rgb(254, 109, 63);
+  background: linear-gradient(
+    90deg,
+    rgba(254, 109, 63, 1) 0%,
+    rgba(254, 31, 141, 1) 39%,
+    rgba(219, 40, 174, 1) 92%
+  );
+  color: #ffffff;
+  filter: drop-shadow(1px 1px 2px rgb(0 0 0/0.4));
+}

@@ -1,0 +1,172 @@
+.header {
+  width: 100%;
+  height: 4.5rem;
+  display: flex;
+}
+.header1,
+.header3 {
+  flex: 0.2;
+}
+.header1 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.header2 {
+  flex: 0.8;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.header2_child1 {
+  height: 2.2rem;
+  width: 60%;
+  border-radius: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fafafa;
+}
+
+.header2_child2 {
+  height: 2.2rem;
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2rem;
+  color: #ffffff;
+  background: rgb(254, 109, 63);
+  background: linear-gradient(
+    90deg,
+    rgba(254, 109, 63, 1) 0%,
+    rgba(254, 31, 141, 1) 39%,
+    rgba(219, 40, 174, 1) 92%
+  );
+  cursor: pointer;
+}
+.header2_child2 > p {
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-top: -2px;
+}
+.header2_search {
+  outline: none;
+  border: none;
+  background: none;
+  width: 85%;
+}
+.header1_img {
+  height: 60%;
+  width: 60%;
+}
+.header1_logo {
+  height: 3.2rem;
+  width: 5rem;
+  border-radius: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header1_logo > img {
+  height: 100%;
+  width: 100%;
+}
+
+.header3 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.header3_child1,
+.header3_child2,
+.header3_child3 {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  border: 1.5px solid grey;
+  background-color: #fafafa;
+  cursor: pointer;
+}
+.header3_child3 {
+  color: grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header3_child1,
+.header3_child2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.create_post_grp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.create_post {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 18rem;
+  width: 25rem;
+  display: flex;
+  flex-direction: column;
+}
+.create_post > form {
+  height: 100%;
+  width: 90%;
+  margin-top: 1rem;
+}
+.post_inp {
+  height: 6rem;
+  width: 25rem;
+  border: none;
+  outline: none;
+  background: #eeeff3;
+  border-radius: 0.5rem;
+}
+.modal_file {
+  height: 1.5rem;
+  outline: none;
+  background: none;
+  width: auto;
+  margin: 0.5rem;
+}
+.modal_submit {
+  margin-left: 1.7rem;
+  cursor: pointer;
+  border-radius: 0.4rem;
+  height: 1.5rem;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background: rgb(254, 109, 63);
+  background: linear-gradient(
+    90deg,
+    rgba(254, 109, 63, 1) 0%,
+    rgba(254, 31, 141, 1) 39%,
+    rgba(219, 40, 174, 1) 92%
+  );
+}
+
+.load {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

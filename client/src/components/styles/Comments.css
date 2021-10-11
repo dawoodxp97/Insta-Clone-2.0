@@ -1,0 +1,32 @@
+.comments {
+  display: flex;
+  width: 100%;
+}
+.comments > div {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+  max-height: 3.5rem;
+  overflow-y: scroll;
+  width: 100%;
+}
+.comments > div > div {
+  height: 1rem;
+  margin-top: 0.1rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comments > div > div > p {
+  height: 1rem;
+  max-height: 5rem;
+  max-width: 80%;
+}
+.comment_edit_icon {
+  cursor: pointer;
+}
+.comment_delete_icon {
+  cursor: pointer;
+  margin-left: 1.2rem;
+}
