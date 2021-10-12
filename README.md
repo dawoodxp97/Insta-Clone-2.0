@@ -48,6 +48,7 @@ Password: test123
 - Responsive UI.
 - Add Bio for user.
 - Search Users.
+- Insta Stories using Zuck.js
 
 <br>
 <div align="center">
