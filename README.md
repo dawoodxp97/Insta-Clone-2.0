@@ -16,6 +16,10 @@ Instagram Clone Application is a Full Stack Social Media Application (MERN) with
 
 <br>
 
+## Test Credentials:
+Email: tester123@test.in
+Password: test123
+
 # Tech Stack:
 - Front-End: <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" width="10%" height="20" />
 - Back-End: <img src="https://img.shields.io/badge/node.js-%2343853D.svg?style=for-the-badge&logo=node.js&logoColor=white" width="10%" height="20"/> , <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" width="10%" height="20"/> 
@@ -43,6 +47,7 @@ Instagram Clone Application is a Full Stack Social Media Application (MERN) with
 - Dark Theme
 - Responsive UI.
 - Add Bio for user.
+- Search Users.
 
 <br>
 <div align="center">
