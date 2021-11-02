@@ -33,11 +33,14 @@ Password: test123
 - Able to create Social Media Post.
 - Able to Like / Unlike each post.
 - Able to Comment the post.
+- Able to add the post to favorites.
+- Able to share the post.
 - Able to Follow / Unfollow users.
 - Able to view the profile of other users.
 - User Authentication (Signin / Signup) implemented using jsonwebtokens.
 - All CRUD Operations implemented.
 - Get Suggestions of users to Follow.
+- Search Users (testing mode)
 
 
 <br>
@@ -47,7 +50,6 @@ Password: test123
 - Dark Theme
 - Responsive UI.
 - Add Bio for user.
-- Search Users.
 - Insta Stories using Zuck.js
 
 <br>
