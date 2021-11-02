@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useStateValue } from "../context/StateProvider";
 import "./styles/Profile.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "./Modal";
+import { useStateValue } from "../context/StateProvider";
 
 toast.configure();
 
 function Profile() {
-  const [{ user, token }, dispatch] = useStateValue();
+  const [{ reload }, dispatch] = useStateValue();
   const [mypost, setMyposts] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [shouldLoad, setShouldLoad] = useState();
   const [image, setImage] = useState();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,15 +25,15 @@ function Profile() {
   };
 
   useEffect(() => {
-    setFollowers(user?.followers);
-    setFollowing(user?.following);
-  }, [user]);
+    setFollowers(JSON.parse(localStorage.getItem("user"))?.followers);
+    setFollowing(JSON.parse(localStorage.getItem("user"))?.following);
+  }, []);
 
   useEffect(() => {
     let isMount = true;
     fetch("/myposts", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
     })
@@ -48,13 +47,13 @@ function Profile() {
       isMount = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, shouldLoad]);
+  }, [reload]);
   const deletePost = (postID) => {
     setLoading(true);
     fetch(`/deletepost/${postID}`, {
       method: "delete",
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
       },
     })
       .then((res) => res.json())
@@ -62,7 +61,10 @@ function Profile() {
         //Post Deleted
         setLoading(false);
         successNotify("Post Deleted Successfully");
-        setShouldLoad(Math.floor(Math.random() * 100 + 1));
+        dispatch({
+          type: "SET_RELOAD",
+          reload: Math.floor(Math.random() * 100 + 1),
+        });
       })
       .catch((err) => {
         warnNotify("Something Went Wrong");
@@ -83,25 +85,30 @@ function Profile() {
     })
       .then((res) => res.json())
       .then((data) => {
-        fetch("/updatepic", {
-          method: "PUT",
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            pic: data?.secure_url,
-          }),
-        })
-          .then((res) => res.json())
-          .then((result) => {
-            setLoading(false);
-            setShouldLoad(Math.floor(Math.random() * 100 + 1));
+        if (data?.secure_url) {
+          fetch("/updatepic", {
+            method: "PUT",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("auth-token"),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              pic: data?.secure_url,
+            }),
           })
-          .catch((err) => {
-            setLoading(false);
-            console.log(err);
-          });
+            .then((res) => res.json())
+            .then((result) => {
+              setLoading(false);
+              dispatch({
+                type: "SET_RELOAD",
+                reload: Math.floor(Math.random() * 100 + 1),
+              });
+            })
+            .catch((err) => {
+              setLoading(false);
+              console.log(err);
+            });
+        }
       })
       .catch((err) => {
         setLoading(false);
@@ -112,22 +119,19 @@ function Profile() {
     fetch("/currUser", {
       method: "GET",
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
       .then((result) => {
-        dispatch({
-          type: "SET_USER",
-          user: result?.user,
-        });
+        localStorage.setItem("user", JSON.stringify(result?.user));
       })
       .catch((err) => {
         console.log(err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, shouldLoad]);
+  }, [reload]);
 
   return (
     <div className="profile">
@@ -159,7 +163,7 @@ function Profile() {
       )}
       <div className="profile_1">
         <div className="profile_1_child1">
-          <img src={user?.pic} alt="" />
+          <img src={JSON.parse(localStorage.getItem("user"))?.pic} alt="" />
           <div
             onClick={() => {
               setIsOpen(true);
@@ -171,7 +175,7 @@ function Profile() {
         </div>
         <div className="profile_1_child2">
           <div className="profile_details1">
-            <h2>{user?.name}</h2>{" "}
+            <h2>{JSON.parse(localStorage.getItem("user"))?.name}</h2>{" "}
           </div>
           <div className="profile_details2">
             <span>{`${mypost.length} Posts`}</span>
@@ -185,7 +189,8 @@ function Profile() {
         {mypost &&
           mypost.map((item) => (
             <div key={item?._id} className="profile_posts">
-              {item?.postedBy?._id === user?._id ? (
+              {item?.postedBy?._id ===
+              JSON.parse(localStorage.getItem("user"))?._id ? (
                 <div
                   onClick={() => {
                     deletePost(item?._id);
