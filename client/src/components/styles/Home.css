@@ -250,11 +250,13 @@
 
 .comment_div {
   display: flex;
-  border-top: 1px solid #c6c6c6;
+  border-radius: 1rem;
+  margin-top: 1rem;
   max-height: 5rem;
   width: 96%;
   padding: 0.8rem;
   transition-duration: 800ms;
+  background-color: #fafafa;
 }
 .profile_link {
   cursor: pointer;
