@@ -2,9 +2,9 @@ import React from "react";
 import "./styles/Comments.css";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import { useStateValue } from "../context/StateProvider";
-function Comments({ comments, postedUser }) {
-  const [{ user }] = useStateValue();
+
+function Comments({ comments }) {
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <div className="comments">
       <h4>Comments:</h4>
