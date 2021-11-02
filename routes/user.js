@@ -44,6 +44,60 @@ router.get("/currUser", requireLogin, (req, res) => {
     });
 });
 
+router.put("/addfav", requireLogin, (req, res) => {
+  Post.findOne({ _id: req.body.postID })
+    .populate("postedBy", "_id name userName pic")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      }
+
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+          $push: { favorites: result },
+        },
+        {
+          new: true,
+        }
+      )
+        .select("-password")
+        .then((data) => {
+          res.json(data);
+        })
+        .catch((err) => {
+          return res.status(422).json({ error: err });
+        });
+    });
+});
+
+router.put("/deletefav", requireLogin, (req, res) => {
+  Post.findOne({ _id: req.body.postID })
+    .populate("postedBy", "_id name userName pic")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      }
+
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+          $pull: { favorites: result },
+        },
+        {
+          new: true,
+        }
+      )
+        .select("-password")
+        .then((data) => {
+          res.json(data);
+        })
+        .catch((err) => {
+          return res.status(422).json({ error: err });
+        });
+    });
+});
+
 router.put("/follow", requireLogin, (req, res) => {
   User.findByIdAndUpdate(
     req.body.followID,
