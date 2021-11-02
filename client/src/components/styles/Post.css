@@ -1,0 +1,50 @@
+.ind_post {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow-y: scroll;
+}
+.ind_post_body {
+  margin-top: 1rem;
+  height: 100%;
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  padding: 1rem;
+}
+.ind_post_body1 {
+  padding-top: 1rem;
+  width: 100%;
+  flex: 0.1;
+}
+.ind_post_body2 {
+  width: 100%;
+  flex: 0.4;
+}
+.ind_post_body3 {
+  width: 100%;
+  flex: 0.1;
+}
+.ind_post_body4 {
+  width: 100%;
+  flex: 0.4;
+}
+.comment_input {
+  height: 2rem;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+.comment_input > form {
+  height: 100%;
+  width: 99%;
+}
+.comment_input > form > input {
+  height: 1.5rem;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: none;
+}
