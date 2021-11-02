@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import "./styles/SignIn.css";
-import { useStateValue } from "../context/StateProvider";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,9 +10,9 @@ toast.configure();
 function SignIn() {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [, dispatch] = useStateValue();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const successNotify = () => {
     toast.success("Signedin Successfully", { autoClose: 1500 });
   };
@@ -33,21 +32,21 @@ function SignIn() {
         password,
       }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        setEmail("");
-        setPassword("");
-        dispatch({
-          type: "SET_USER",
-          user: data?.user,
-        });
-        dispatch({
-          type: "SET_TOKEN",
-          token: data?.token,
-        });
-        setLoading(false);
-        successNotify();
-        history.push("/home");
+      .then(async (response) => {
+        try {
+          const data = await response.json();
+          setEmail("");
+          setPassword("");
+          localStorage.setItem("auth-token", data?.token);
+          localStorage.setItem("user", JSON.stringify(data?.user));
+          setLoading(false);
+          successNotify();
+          history.push("/home");
+        } catch (error) {
+          setLoading(false);
+          console.log("Error happened here!");
+          console.error(error);
+        }
       })
       .catch((err) => {
         setLoading(false);
