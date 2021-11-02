@@ -1,16 +1,25 @@
-export const initialState = { user: null, track: "" };
+export const initialState = {
+  allPosts: [],
+  reload: null,
+  searchData: null,
+};
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "SET_USER":
+    case "SET_ALLPOST":
       return {
         ...state,
-        user: action.user,
+        allPosts: action.allPosts,
       };
-    case "SET_TOKEN":
+    case "SET_RELOAD":
       return {
         ...state,
-        token: action.token,
+        reload: action.reload,
+      };
+    case "SET_SEARCHDATA":
+      return {
+        ...state,
+        searchData: action.searchData,
       };
 
     default:
