@@ -4,18 +4,17 @@ import { useStateValue } from "../context/StateProvider";
 
 function Profile() {
   const { userID } = useParams();
-  const [{ token, user }] = useStateValue();
+  const [{ reload }, dispatch] = useStateValue();
   const [actuser, setActuser] = useState({});
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [mypost, setMyposts] = useState([]);
-  const [shouldLoad, setShouldLoad] = useState();
   const [showFollow, setShowFollow] = useState();
   useEffect(() => {
     let isMount = true;
     fetch(`/user/${userID}`, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
     })
@@ -32,20 +31,22 @@ function Profile() {
       isMount = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID, shouldLoad]);
+  }, [userID, reload]);
 
   useEffect(() => {
-    if (followers.includes(user?._id)) {
+    if (followers.includes(JSON.parse(localStorage.getItem("user"))?._id)) {
       setShowFollow(false);
-    } else if (!followers.includes(user?._id)) {
+    } else if (
+      !followers.includes(JSON.parse(localStorage.getItem("user"))?._id)
+    ) {
       setShowFollow(true);
     }
-  }, [followers, user?._id, userID]);
+  }, [followers, userID]);
   const followUser = () => {
     fetch("/follow", {
       method: "put",
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -55,7 +56,10 @@ function Profile() {
       .then((res) => res.json())
       .then((result) => {
         setShowFollow(false);
-        setShouldLoad(Math.floor(Math.random() * 100 + 1));
+        dispatch({
+          type: "SET_RELOAD",
+          reload: Math.floor(Math.random() * 100 + 1),
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -64,7 +68,7 @@ function Profile() {
     fetch("/unfollow", {
       method: "put",
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -74,7 +78,10 @@ function Profile() {
       .then((res) => res.json())
       .then((result) => {
         setShowFollow(true);
-        setShouldLoad(Math.floor(Math.random() * 100 + 1));
+        dispatch({
+          type: "SET_RELOAD",
+          reload: Math.floor(Math.random() * 100 + 1),
+        });
       })
       .catch((err) => console.log(err));
   };
