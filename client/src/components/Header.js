@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import "./styles/Header.css";
 import { BiSearchAlt } from "react-icons/bi";
 import { BiMicrophone } from "react-icons/bi";
@@ -7,49 +7,40 @@ import { RiSendPlaneFill } from "react-icons/ri";
 import { RiNotification2Line } from "react-icons/ri";
 import { RiMoonLine } from "react-icons/ri";
 import Modal from "./Modal";
-import { useStateValue } from "../context/StateProvider";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useStateValue } from "../context/StateProvider";
+import { Link } from "react-router-dom";
 
 function Header() {
-  const [{ token }] = useStateValue();
+  const [{ searchData }, dispatch] = useStateValue();
   const [image, setImage] = useState();
-  const [url, setUrl] = useState("");
   const [msg, setMsg] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const inputElem = useRef();
+  const [searchedItems, setSearchedItems] = useState([]);
 
-  useEffect(() => {
-    let isMount = true;
-    if (url) {
-      fetch("/createpost", {
-        method: "post",
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: msg,
-          photo: url,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (isMount) {
-            setMsg("");
-            setUrl("");
-            setLoading(false);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          console.log(err);
-        });
+  const displaySearch = () => {
+    document.getElementById("search-content").style.display = "block";
+  };
+  const hideSearch = () => {
+    document.getElementById("search-content").style.display = "none";
+  };
+
+  const getSearch = () => {
+    getSearchData(searchData, inputElem.current.value);
+  };
+
+  const getSearchData = function (data, title) {
+    if (title !== "") {
+      const searchObject = data.filter((item) =>
+        item?.name.toLowerCase().includes(title.toLowerCase())
+      );
+      setSearchedItems(searchObject);
+    } else {
+      setSearchedItems([]);
     }
-    return () => {
-      isMount = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,7 +56,32 @@ function Header() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setUrl(data?.secure_url);
+        if (data?.secure_url) {
+          fetch("/createpost", {
+            method: "post",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("auth-token"),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: msg,
+              photo: data?.secure_url,
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              dispatch({
+                type: "SET_RELOAD",
+                reload: Math.floor(Math.random() * 100 + 1),
+              });
+              setMsg("");
+              setLoading(false);
+            })
+            .catch((err) => {
+              setLoading(false);
+              console.log(err);
+            });
+        }
       })
       .catch((err) => {
         setLoading(false);
@@ -121,8 +137,34 @@ function Header() {
       </div>
       <div className="header2">
         <div className="header2_child1">
+          <div id="search-content" className="search_content">
+            {searchedItems &&
+              searchedItems?.map((item) => (
+                <Link
+                  style={{ textDecoration: "none", color: "black" }}
+                  to={
+                    JSON.parse(localStorage.getItem("user"))?._id === item?._id
+                      ? `/home/profile`
+                      : `/home/userprofile/${item?._id}`
+                  }
+                >
+                  <div key={item?._id} className="search_item">
+                    <p>{item?.name}</p>
+                    <span>{`@${item?.userName}`}</span>
+                  </div>
+                </Link>
+              ))}
+          </div>
           <BiSearchAlt style={{ color: "grey", marginLeft: "1rem" }} />
-          <input className="header2_search" type="text" placeholder="Search" />
+          <input
+            ref={inputElem}
+            onFocus={displaySearch}
+            onBlur={hideSearch}
+            className="header2_search"
+            type="text"
+            placeholder="Search"
+            onChange={getSearch}
+          />
           <BiMicrophone style={{ color: "grey", marginRight: "1rem" }} />
         </div>
         <div onClick={() => setIsOpen(true)} className="header2_child2">
