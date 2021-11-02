@@ -1,0 +1,17 @@
+.fav_container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+.fav_post {
+  padding-top: 1rem;
+}
+.fav_grp {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+}
