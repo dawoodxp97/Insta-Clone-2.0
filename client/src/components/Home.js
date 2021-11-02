@@ -3,6 +3,7 @@ import "./styles/Home.css";
 import { MdHome } from "react-icons/md";
 import { BsCollection } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
+import { BsBookmarkFill } from "react-icons/bs";
 import { FiSend } from "react-icons/fi";
 import { BsDisplay } from "react-icons/bs";
 import { HiHeart } from "react-icons/hi";
@@ -14,59 +15,124 @@ import { BiShareAlt } from "react-icons/bi";
 import { useHistory } from "react-router";
 import { GrFormNext } from "react-icons/gr";
 import { useStateValue } from "../context/StateProvider";
-import Comments from "./Comments";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Modal from "./Modal";
-import ClipLoader from "react-spinners/ClipLoader";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Profile from "./Profile";
 import Usersprofile from "./Usersprofile";
+import Post from "./Post";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Favorites from "./Favorites";
 
 toast.configure();
 
 function Home() {
   const history = useHistory();
-  const [{ token, user }, dispatch] = useStateValue();
+  const [{ reload }, dispatch] = useStateValue();
   const [data, setData] = useState([]);
   const [users, setUsers] = useState([]);
-  const [shouldLoad, setShouldLoad] = useState();
-  const [isOpen, setIsOpen] = useState(false);
-  const [postId, setPostId] = useState("");
-  const [msg, setMsg] = useState("");
-  const [loading, setLoading] = useState(false);
+  const successNotify = (text) => {
+    toast.success(text, { autoClose: 1500 });
+  };
 
+  const addToFav = (id) => {
+    fetch("/addfav", {
+      method: "put",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: id,
+      }),
+    })
+      .then(async (response) => {
+        try {
+          const data = await response.json();
+          localStorage.setItem("user", JSON.stringify(data));
+          dispatch({
+            type: "SET_RELOAD",
+            reload: Math.floor(Math.random() * 100 + 1),
+          });
+        } catch (error) {
+          console.log("Error happened here!");
+          console.error(error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const deleteFav = (id) => {
+    fetch("/deletefav", {
+      method: "put",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postID: id,
+      }),
+    })
+      .then(async (response) => {
+        try {
+          const data = await response.json();
+          localStorage.setItem("user", JSON.stringify(data));
+          dispatch({
+            type: "SET_RELOAD",
+            reload: Math.floor(Math.random() * 100 + 1),
+          });
+        } catch (error) {
+          console.log("Error happened here!");
+          console.error(error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
+    const token = localStorage.getItem("auth-token");
     if (!token) {
       history.push("/");
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     fetch("/allusers", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
       .then((result) => {
         if (result) {
+          dispatch({
+            type: "SET_SEARCHDATA",
+            searchData: result?.data,
+          });
           setUsers(
-            result.data.filter(function (item) {
+            result?.data?.filter(function (item) {
               return (
-                item?._id !== user?._id && !item?.followers.includes(user?._id)
+                item?._id !== JSON.parse(localStorage.getItem("user"))?._id &&
+                !item?.followers.includes(
+                  JSON.parse(localStorage.getItem("user"))?._id
+                )
               );
             })
           );
         }
       });
-  }, [token, user?._id, shouldLoad]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reload]);
 
   const followTrendingUsers = (userID) => {
     fetch("/follow", {
       method: "put",
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -75,7 +141,10 @@ function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
-        setShouldLoad(Math.floor(Math.random() * 100 + 1));
+        dispatch({
+          type: "SET_RELOAD",
+          reload: Math.floor(Math.random() * 100 + 1),
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -83,7 +152,7 @@ function Home() {
   useEffect(() => {
     fetch("/allposts", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
         "Content-Type": "application/json",
       },
     })
@@ -91,109 +160,48 @@ function Home() {
       .then((result) => {
         if (result) {
           setData(result.posts);
+          dispatch({
+            type: "SET_ALLPOST",
+            allPosts: result.posts,
+          });
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldLoad]);
-
-  const handleLogout = () => {
-    dispatch({
-      type: "SET_TOKEN",
-      token: "",
-    });
-    dispatch({
-      type: "SET_USER",
-      user: "",
-    });
-  };
-  const successNotify = (text) => {
-    toast.success(text, { autoClose: 1500 });
-  };
-  const warnNotify = (text) => {
-    toast.warn(text);
-  };
-  const createComment = (e) => {
-    setIsOpen(false);
-    setLoading(true);
-    e.preventDefault();
-    fetch("/comment", {
-      method: "put",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: msg,
-        postId,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        //Comment Added
-        setMsg("");
-        setPostId("");
-        setShouldLoad(Math.floor(Math.random() * 100 + 1));
-        setLoading(false);
-        successNotify("Successfully Commented");
-      })
-      .catch((err) => {
-        console.log(err);
-        warnNotify("Something went wrong");
-      });
-  };
+  }, [reload]);
 
   return (
     <div className="home">
       <Router>
-        {loading && (
-          <div className="load">
-            <ClipLoader color="#fe5656" loading={loading} size={120} />
-          </div>
-        )}
-        {isOpen && (
-          <Modal closeModal={() => setIsOpen(false)}>
-            {" "}
-            <div className="create_post_grp">
-              <h1> Comment</h1>
-              <div className="create_post">
-                <form onSubmit={createComment}>
-                  <input
-                    className="post_inp"
-                    type="text"
-                    onChange={(e) => setMsg(e.target.value.trimStart())}
-                    required
-                    value={msg}
-                    name="msg"
-                  />
-                  <input className="modal_submit" type="submit" />
-                </form>
-              </div>
-            </div>
-          </Modal>
-        )}
         <div className="sidebar">
           <div className="sidebar1">
             <div className="sidebar1_child1">
-              <img src={user?.pic} alt="" />
+              <img src={JSON.parse(localStorage.getItem("user"))?.pic} alt="" />
               <div>
                 <p>
                   {" "}
-                  {user?.name}{" "}
+                  {JSON.parse(localStorage.getItem("user"))?.name}{" "}
                   <Link to="/home/profile">
                     {" "}
                     <GrFormNext />{" "}
                   </Link>{" "}
                 </p>
-                <span> @{user?.userName}</span>
+                <span>
+                  {" "}
+                  @{JSON.parse(localStorage.getItem("user"))?.userName}
+                </span>
               </div>
             </div>
             <div className="sidebar1_child2">
               <div>
-                <p>{user?.followers?.length}</p>
+                <p>
+                  {JSON.parse(localStorage.getItem("user"))?.followers?.length}
+                </p>
                 <span>Followers</span>
               </div>
               <div>
-                <p>{user?.following?.length}</p>
+                <p>
+                  {JSON.parse(localStorage.getItem("user"))?.following?.length}
+                </p>
                 <span>Following</span>
               </div>
             </div>
@@ -237,7 +245,7 @@ function Home() {
                   color: "#c6c6c6",
                   marginLeft: "1rem",
                 }}
-                to="/favorites"
+                to="/home/favorites"
               >
                 {" "}
                 <span>Favorites</span>{" "}
@@ -290,7 +298,12 @@ function Home() {
             </div>
           </div>
           <div className="sidebar3">
-            <div onClick={handleLogout}>
+            <div
+              onClick={() => {
+                localStorage.clear();
+                history.push("/");
+              }}
+            >
               {" "}
               <FiLogOut className="icon" /> <span>Logout</span>
             </div>
@@ -301,7 +314,10 @@ function Home() {
             <Route path="/home/profile">
               <Profile />
             </Route>
-            <Route path="/home">
+            <Route path="/home/favorites">
+              <Favorites />
+            </Route>
+            <Route exact path="/home">
               <div className="feed_content">
                 <div className="stories"></div>
                 <div className="posts">
@@ -318,9 +334,10 @@ function Home() {
                             <Link
                               style={{ textDecoration: "none", color: "black" }}
                               to={
-                                user?._id === item?.postedBy._id
+                                JSON.parse(localStorage.getItem("user"))
+                                  ?._id === item?.postedBy._id
                                   ? `/home/profile`
-                                  : `/profile/${item?.postedBy?._id}`
+                                  : `/home/userprofile/${item?.postedBy?._id}`
                               }
                             >
                               {" "}
@@ -330,19 +347,31 @@ function Home() {
                           <span>@{item?.postedBy.userName}</span>
                         </div>
                       </div>
-                      <div className="post_body">
-                        <p>{item?.message}</p>
-                        <img src={item?.photo} alt="" />
-                      </div>
+                      <Link
+                        style={{
+                          textDecoration: "none",
+                          color: "#121212",
+                        }}
+                        to={`/home/post/${item?._id}`}
+                      >
+                        <div className="post_body">
+                          <p>{item?.message}</p>
+                          <img src={item?.photo} alt="" />
+                        </div>
+                      </Link>
                       <div className="post_footer">
                         <div className="post_footer_like">
-                          {item?.likes.includes(user?._id) ? (
+                          {item?.likes.includes(
+                            JSON.parse(localStorage.getItem("user"))?._id
+                          ) ? (
                             <HiHeart
                               onClick={() => {
                                 fetch("/unlike", {
                                   method: "put",
                                   headers: {
-                                    Authorization: "Bearer " + token,
+                                    Authorization:
+                                      "Bearer " +
+                                      localStorage.getItem("auth-token"),
                                     "Content-Type": "application/json",
                                   },
                                   body: JSON.stringify({
@@ -351,9 +380,12 @@ function Home() {
                                 })
                                   .then((res) => res.json())
                                   .then((result) => {
-                                    setShouldLoad(
-                                      Math.floor(Math.random() * 100 + 1)
-                                    );
+                                    dispatch({
+                                      type: "SET_RELOAD",
+                                      reload: Math.floor(
+                                        Math.random() * 100 + 1
+                                      ),
+                                    });
                                   })
                                   .catch((err) => console.log(err));
                               }}
@@ -365,7 +397,9 @@ function Home() {
                                 fetch("/like", {
                                   method: "put",
                                   headers: {
-                                    Authorization: "Bearer " + token,
+                                    Authorization:
+                                      "Bearer " +
+                                      localStorage.getItem("auth-token"),
                                     "Content-Type": "application/json",
                                   },
                                   body: JSON.stringify({
@@ -374,9 +408,12 @@ function Home() {
                                 })
                                   .then((res) => res.json())
                                   .then((result) => {
-                                    setShouldLoad(
-                                      Math.floor(Math.random() * 100 + 1)
-                                    );
+                                    dispatch({
+                                      type: "SET_RELOAD",
+                                      reload: Math.floor(
+                                        Math.random() * 100 + 1
+                                      ),
+                                    });
                                   })
                                   .catch((err) => console.log(err));
                               }}
@@ -386,41 +423,60 @@ function Home() {
 
                           <span>{`${item?.likes.length} Likes`}</span>
                         </div>
-                        <div
-                          onClick={() => {
-                            setPostId(item?._id);
-                            setIsOpen(true);
-                          }}
-                          className="post_footer_comment"
-                        >
+                        <div className="post_footer_comment">
                           <RiChat1Line />
                           <span>{`${item?.comments.length} Comments`}</span>
                         </div>
                         <div className="post_footer_share">
                           <BiShareAlt />
-                          <span>Shares</span>
+                          <CopyToClipboard
+                            text={`https://ins-skd.herokuapp.com/home/post/${item?._id}`}
+                            onCopy={() => {
+                              successNotify("Link Copied to Clipboard");
+                            }}
+                          >
+                            <span style={{ cursor: "pointer" }}>Share</span>
+                          </CopyToClipboard>
                         </div>
-                        <div className="post_footer_saved">
-                          <BsBookmark />
-                          <span>Save</span>
-                        </div>
+                        {JSON.parse(
+                          localStorage.getItem("user")
+                        ).favorites?.some(function (elem) {
+                          return elem._id === item?._id;
+                        }) ? (
+                          <div className="post_footer_saved">
+                            <BsBookmarkFill />
+                            <span
+                              onClick={() => {
+                                deleteFav(item?._id);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              Saved
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="post_footer_saved">
+                            <BsBookmark />
+                            <span
+                              onClick={() => {
+                                addToFav(item?._id);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              Save
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      {item?.comments.length === 0 ? (
-                        ""
-                      ) : (
-                        <div className="comment_div">
-                          <Comments
-                            postedUser={item?.postedBy._id}
-                            comments={item?.comments}
-                          />
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
               </div>
             </Route>
-            <Route path="/profile/:userID">
+            <Route path="/home/post/:postID">
+              <Post />
+            </Route>
+            <Route path="/home/userprofile/:userID">
               <Usersprofile />
             </Route>
           </Switch>
