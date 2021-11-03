@@ -155,6 +155,7 @@ function Header() {
                 </Link>
               ))}
           </div>
+
           <BiSearchAlt style={{ color: "grey", marginLeft: "1rem" }} />
           <input
             ref={inputElem}
