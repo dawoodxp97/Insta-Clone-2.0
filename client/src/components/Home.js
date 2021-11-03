@@ -34,7 +34,6 @@ function Home() {
   const successNotify = (text) => {
     toast.success(text, { autoClose: 1500 });
   };
-
   const addToFav = (id) => {
     fetch("/addfav", {
       method: "put",
