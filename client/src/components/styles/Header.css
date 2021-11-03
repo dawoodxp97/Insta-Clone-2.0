@@ -65,7 +65,7 @@
   height: 2rem;
   width: 100%;
   display: flex;
-  padding-left: 1rem;
+  padding-left: 0.4rem;
   align-items: center;
 }
 .search_item > p {
