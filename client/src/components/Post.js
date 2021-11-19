@@ -12,6 +12,7 @@ import { useParams } from "react-router";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import ClipLoader from "react-spinners/ClipLoader";
 
 toast.configure();
 
@@ -20,6 +21,7 @@ function Post() {
   const { postID } = useParams();
   const [post, setPost] = useState();
   const [msg, setMsg] = useState("");
+  const [load, setLoad] = useState(false);
 
   useEffect(() => {
     setPost(allPosts.filter((item) => item?._id === postID)[0]);
@@ -32,7 +34,49 @@ function Post() {
     toast.warn(text);
   };
 
+  const handleLike = () => {
+    fetch("/like", {
+      method: "put",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: post?._id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        dispatch({
+          type: "SET_RELOAD",
+          reload: Math.floor(Math.random() * 100 + 1),
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+  const handleUnlike = () => {
+    fetch("/unlike", {
+      method: "put",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("auth-token"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: post?._id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        dispatch({
+          type: "SET_RELOAD",
+          reload: Math.floor(Math.random() * 100 + 1),
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+
   const createComment = () => {
+    setLoad(true);
     if (msg !== "") {
       fetch("/comment", {
         method: "put",
@@ -53,10 +97,12 @@ function Post() {
             reload: Math.floor(Math.random() * 100 + 1),
           });
           setMsg("");
+          setLoad(false);
           successNotify("Successfully Commented");
         })
         .catch((err) => {
           console.log(err);
+          setLoad(false);
           warnNotify("Something went wrong");
         });
     }
@@ -74,12 +120,15 @@ function Post() {
               <h5>
                 {" "}
                 <Link
-                  style={{ textDecoration: "none", color: "black" }}
+                  style={{
+                    textDecoration: "none",
+                    color: "var(--text-primary)",
+                  }}
                   to={
                     JSON.parse(localStorage.getItem("user"))?._id ===
                     post?.postedBy?._id
                       ? `/home/profile`
-                      : `/profile/${post?.postedBy?._id}`
+                      : `/home/userprofile/${post?.postedBy?._id}`
                   }
                 >
                   {" "}
@@ -102,55 +151,9 @@ function Post() {
               {post?.likes.includes(
                 JSON.parse(localStorage.getItem("user"))?._id
               ) ? (
-                <HiHeart
-                  onClick={() => {
-                    fetch("/unlike", {
-                      method: "put",
-                      headers: {
-                        Authorization:
-                          "Bearer " + localStorage.getItem("auth-token"),
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        postId: post?._id,
-                      }),
-                    })
-                      .then((res) => res.json())
-                      .then((result) => {
-                        dispatch({
-                          type: "SET_RELOAD",
-                          reload: Math.floor(Math.random() * 100 + 1),
-                        });
-                      })
-                      .catch((err) => console.log(err));
-                  }}
-                  className="like_icon"
-                />
+                <HiHeart onClick={handleUnlike} className="like_icon" />
               ) : (
-                <HiOutlineHeart
-                  onClick={() => {
-                    fetch("/like", {
-                      method: "put",
-                      headers: {
-                        Authorization:
-                          "Bearer " + localStorage.getItem("auth-token"),
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        postId: post?._id,
-                      }),
-                    })
-                      .then((res) => res.json())
-                      .then((result) => {
-                        dispatch({
-                          type: "SET_RELOAD",
-                          reload: Math.floor(Math.random() * 100 + 1),
-                        });
-                      })
-                      .catch((err) => console.log(err));
-                  }}
-                  className="unlike_icon"
-                />
+                <HiOutlineHeart onClick={handleLike} className="unlike_icon" />
               )}
 
               <span>{`${post?.likes.length} Likes`}</span>
@@ -177,29 +180,36 @@ function Post() {
           </div>
         </div>
         <div className="ind_post_body4">
-          <div className="comment_input">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                createComment();
-              }}
-            >
-              <input
-                type="text"
-                value={msg}
-                placeholder="Write your Comment here"
-                required
-                onChange={(e) => {
-                  setMsg(e.target.value);
+          {load ? (
+            <div style={{ marginLeft: "5rem" }}>
+              <ClipLoader color="#fe5656" loading={load} size={15} />
+            </div>
+          ) : (
+            <div className="comment_input">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  createComment();
                 }}
-              />
-            </form>
-          </div>
+              >
+                <input
+                  type="text"
+                  value={msg}
+                  placeholder="Write your Comment here"
+                  required
+                  onChange={(e) => {
+                    setMsg(e.target.value);
+                  }}
+                />
+              </form>
+            </div>
+          )}
+
           {post?.comments.length === 0 ? (
             ""
           ) : (
             <div className="comment_div">
-              <Comments comments={post?.comments} />
+              <Comments comments={post?.comments} postId={post?._id} />
             </div>
           )}
         </div>
