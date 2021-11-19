@@ -1,5 +1,15 @@
 @import url(https://cdn.rawgit.com/mfd/09b70eb47474836f25a21660282ce0fd/raw/e06a670afcb2b861ed2ac4a1ef752d062ef6b46b/Gilroy.css);
 
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --text-primary: black;
+  --text-secondary: #c6c6c6;
+  --box-shadow: rgba(0, 0, 0, 0.24);
+  --trend-bg: #dbe9e2;
+  --trend-icon: #3997ef;
+}
+
 * {
   margin: 0;
 }
