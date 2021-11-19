@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./styles/Home.css";
 import { MdHome } from "react-icons/md";
-import { BsCollection } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
 import { BsBookmarkFill } from "react-icons/bs";
 import { FiSend } from "react-icons/fi";
-import { BsDisplay } from "react-icons/bs";
 import { HiHeart } from "react-icons/hi";
 import { HiOutlineHeart } from "react-icons/hi";
-import { RiSettings4Line } from "react-icons/ri";
 import { FiLogOut } from "react-icons/fi";
 import { RiChat1Line } from "react-icons/ri";
 import { BiShareAlt } from "react-icons/bi";
@@ -23,17 +20,22 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Favorites from "./Favorites";
+import ClipLoader from "react-spinners/ClipLoader";
+import Direct from "./Direct";
 
 toast.configure();
 
 function Home() {
+  const navBtns = document.getElementsByClassName("nav");
   const history = useHistory();
   const [{ reload }, dispatch] = useStateValue();
   const [data, setData] = useState([]);
   const [users, setUsers] = useState([]);
+  const [load, setLoad] = useState(true);
   const successNotify = (text) => {
     toast.success(text, { autoClose: 1500 });
   };
+
   const addToFav = (id) => {
     fetch("/addfav", {
       method: "put",
@@ -90,6 +92,18 @@ function Home() {
         console.log(err);
       });
   };
+
+  const focusNav = () => {
+    for (let i = 0; i < navBtns.length; i++) {
+      navBtns[i].addEventListener("click", function () {
+        const current = document.getElementsByClassName("nav_active");
+        current[0].className = current[0].className.replace("nav_active", "");
+        this.className += " nav_active";
+      });
+    }
+  };
+  focusNav();
+
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
     if (!token) {
@@ -163,6 +177,7 @@ function Home() {
             type: "SET_ALLPOST",
             allPosts: result.posts,
           });
+          setLoad(false);
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,10 +193,14 @@ function Home() {
               <div>
                 <p>
                   {" "}
-                  {JSON.parse(localStorage.getItem("user"))?.name}{" "}
-                  <Link to="/home/profile">
-                    {" "}
-                    <GrFormNext />{" "}
+                  <Link
+                    to="/home/profile"
+                    style={{
+                      textDecoration: "none",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {JSON.parse(localStorage.getItem("user"))?.name}{" "}
                   </Link>{" "}
                 </p>
                 <span>
@@ -206,95 +225,33 @@ function Home() {
             </div>
           </div>
           <div className="sidebar2">
-            <div id="nav_active">
-              {" "}
-              <MdHome className="icon" />{" "}
-              <Link
-                style={{
-                  textDecoration: "none",
-                  color: "#fe456e",
-                  marginLeft: "1rem",
-                }}
-                to="/home"
-              >
+            <Link
+              style={{ textDecoration: "none", color: "#c6c6c6" }}
+              to="/home"
+            >
+              <div className="nav nav_active">
                 {" "}
-                <span>Home</span>{" "}
-              </Link>{" "}
-            </div>
-            <div>
-              {" "}
-              <BsCollection className="icon" />
-              <Link
-                style={{
-                  textDecoration: "none",
-                  color: "#c6c6c6",
-                  marginLeft: "1rem",
-                }}
-                to="/explore"
-              >
-                <span>Explore</span>{" "}
-              </Link>
-            </div>
-            <div>
-              {" "}
-              <BsBookmark className="icon" />{" "}
-              <Link
-                style={{
-                  textDecoration: "none",
-                  color: "#c6c6c6",
-                  marginLeft: "1rem",
-                }}
-                to="/home/favorites"
-              >
+                <MdHome className="icon" /> <span>Home</span>{" "}
+              </div>
+            </Link>
+            <Link
+              style={{ textDecoration: "none", color: "#c6c6c6" }}
+              to="/home/favorites"
+            >
+              <div className="nav">
                 {" "}
-                <span>Favorites</span>{" "}
-              </Link>{" "}
-            </div>
-            <div>
-              {" "}
-              <FiSend className="icon" />{" "}
-              <Link
-                style={{
-                  textDecoration: "none",
-                  color: "#c6c6c6",
-                  marginLeft: "1rem",
-                }}
-                to="/direct"
-              >
+                <BsBookmark className="icon" /> <span>Favorites</span>{" "}
+              </div>
+            </Link>
+            <Link
+              style={{ textDecoration: "none", color: "#c6c6c6" }}
+              to="/home/direct"
+            >
+              <div className="nav">
                 {" "}
-                <span>Direct</span>{" "}
-              </Link>
-            </div>
-            <div>
-              {" "}
-              <BsDisplay className="icon" />{" "}
-              <Link
-                style={{
-                  textDecoration: "none",
-                  color: "#c6c6c6",
-                  marginLeft: "1rem",
-                }}
-                to="/ig"
-              >
-                {" "}
-                <span>IG TV</span>{" "}
-              </Link>{" "}
-            </div>
-            <div>
-              {" "}
-              <RiSettings4Line className="icon" />{" "}
-              <Link
-                style={{
-                  textDecoration: "none",
-                  marginLeft: "1rem",
-                  color: "#c6c6c6",
-                }}
-                to="/settings"
-              >
-                {" "}
-                <span>Settings</span>{" "}
-              </Link>{" "}
-            </div>
+                <FiSend className="icon" /> <span>Direct</span>{" "}
+              </div>
+            </Link>
           </div>
           <div className="sidebar3">
             <div
@@ -313,6 +270,9 @@ function Home() {
             <Route path="/home/profile">
               <Profile />
             </Route>
+            <Route path="/home/direct">
+              <Direct />
+            </Route>
             <Route path="/home/favorites">
               <Favorites />
             </Route>
@@ -321,6 +281,13 @@ function Home() {
                 <div className="stories"></div>
                 <div className="posts">
                   <h4>Feed</h4>
+                  {data.length === 0 ? (
+                    <div className="load">
+                      <ClipLoader color="#fe5656" loading={load} size={80} />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   {data?.map((item) => (
                     <div key={item?._id} className="post">
                       <div className="post_header">
@@ -331,7 +298,10 @@ function Home() {
                           <h5>
                             {" "}
                             <Link
-                              style={{ textDecoration: "none", color: "black" }}
+                              style={{
+                                textDecoration: "none",
+                                color: "var(--text-primary)",
+                              }}
                               to={
                                 JSON.parse(localStorage.getItem("user"))
                                   ?._id === item?.postedBy._id
@@ -424,7 +394,15 @@ function Home() {
                         </div>
                         <div className="post_footer_comment">
                           <RiChat1Line />
-                          <span>{`${item?.comments.length} Comments`}</span>
+                          <Link
+                            style={{
+                              textDecoration: "none",
+                              color: "var(--text-primary)",
+                            }}
+                            to={`/home/post/${item?._id}`}
+                          >
+                            <span>{`${item?.comments.length} Comments`}</span>
+                          </Link>
                         </div>
                         <div className="post_footer_share">
                           <BiShareAlt />
