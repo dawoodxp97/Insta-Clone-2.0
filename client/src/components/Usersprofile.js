@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { useStateValue } from "../context/StateProvider";
+import ClipLoader from "react-spinners/ClipLoader";
 
 function Profile() {
   const { userID } = useParams();
@@ -9,6 +11,7 @@ function Profile() {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [mypost, setMyposts] = useState([]);
+  const [innerLoad, setInnerLoad] = useState(true);
   const [showFollow, setShowFollow] = useState();
   useEffect(() => {
     let isMount = true;
@@ -25,6 +28,7 @@ function Profile() {
           setActuser(result.user);
           setFollowers(result.user.followers);
           setFollowing(result.user.following);
+          setInnerLoad(false);
         }
       });
     return () => {
@@ -86,7 +90,11 @@ function Profile() {
       .catch((err) => console.log(err));
   };
 
-  return (
+  return innerLoad ? (
+    <div className="user_load">
+      <ClipLoader color="#fe5656" loading={innerLoad} size={50} />
+    </div>
+  ) : (
     <div className="profile">
       <div className="profile_1">
         <div className="profile_1_child1">
@@ -113,12 +121,23 @@ function Profile() {
           <div className="profile_details3">Bio</div>
         </div>
       </div>
+      <div>
+        <h3 className="user_posts_title">Posts</h3>
+      </div>
       <div className="profile_2">
         {mypost &&
           mypost.map((item) => (
-            <div key={item?._id} className="profile_posts">
-              <img src={item?.photo} alt={item?.message} />
-            </div>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "#121212",
+              }}
+              to={`/home/post/${item?._id}`}
+            >
+              <div key={item?._id} className="profile_posts">
+                <img src={item?.photo} alt={item?.message} />
+              </div>
+            </Link>
           ))}
       </div>
     </div>
