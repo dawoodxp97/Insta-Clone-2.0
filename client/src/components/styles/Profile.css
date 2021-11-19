@@ -74,6 +74,15 @@
   width: 100%;
   border-radius: 0.5rem;
 }
+.post_icons {
+  margin: 3.8rem;
+  position: absolute;
+  z-index: 50;
+  opacity: 0;
+}
+.post_icons:hover {
+  opacity: 1;
+}
 .post_del {
   height: 1.5rem;
   width: 4.5rem;
@@ -87,15 +96,16 @@
   font-size: small;
   font-weight: bold;
   letter-spacing: 1px;
-  position: absolute;
-  z-index: 50;
-  margin: 4rem;
-  opacity: 0;
-}
-.post_del:hover {
-  opacity: 1;
 }
 
+.user_posts_title {
+  margin-left: 2rem;
+}
+.inner_load {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .pic_edit {
   background-color: #0f3fdd;
   height: 2rem;
@@ -113,4 +123,18 @@
 }
 .pic_edit:hover {
   opacity: 1;
+}
+.user_load {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
