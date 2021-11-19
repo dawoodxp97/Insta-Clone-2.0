@@ -19,40 +19,47 @@ function SignIn() {
   const warnNotify = () => {
     toast.warn("Something went wrong", { autoClose: 1500 });
   };
-  const handleSubmit = (e) => {
+
+  const handleLogin = () => {
     setLoading(true);
-    e.preventDefault();
-    fetch("/signin", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    })
-      .then(async (response) => {
-        try {
-          const data = await response.json();
-          setEmail("");
-          setPassword("");
-          localStorage.setItem("auth-token", data?.token);
-          localStorage.setItem("user", JSON.stringify(data?.user));
-          setLoading(false);
-          successNotify();
-          history.push("/home");
-        } catch (error) {
-          setLoading(false);
-          console.log("Error happened here!");
-          console.error(error);
-        }
+    if (email) {
+      fetch("/signin", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-        warnNotify();
-      });
+        .then(async (response) => {
+          try {
+            const data = await response.json();
+            setEmail("");
+            setPassword("");
+            localStorage.setItem("auth-token", data?.token);
+            localStorage.setItem("user", JSON.stringify(data?.user));
+            setLoading(false);
+            successNotify();
+            history.push("/home");
+          } catch (error) {
+            setLoading(false);
+            console.log("Error happened here!");
+            console.error(error);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err);
+          warnNotify();
+        });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin();
   };
   return (
     <div className="signin">
@@ -114,6 +121,15 @@ function SignIn() {
                   Sign Up
                 </Link>
               </p>
+              <button
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setEmail("tester1234@test.com");
+                  setPassword("testing_user@12345");
+                }}
+              >
+                Guest Login
+              </button>
             </form>
           </div>
         </div>
