@@ -40,16 +40,17 @@ Password: test123
 - User Authentication (Signin / Signup) implemented using jsonwebtokens.
 - All CRUD Operations implemented.
 - Get Suggestions of users to Follow.
-- Search Users (testing mode)
+- Search Users.
+- Edit and Delete Comment in post.
+- Dark Theme
 
 
 <br>
 
 # Upcoming Features:
-- Edit and Delete Comment in post.
-- Dark Theme
 - Responsive UI.
 - Add Bio for user.
+- DM Feature.
 - Insta Stories using Zuck.js
 
 <br>
