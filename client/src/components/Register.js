@@ -84,7 +84,7 @@ function Register() {
       uploadUser();
     }
   };
-  console.log(img);
+
   return (
     <div className="signin">
       {loading && (
