@@ -79,6 +79,49 @@ router.put("/unlike", requireLogin, (req, res) => {
   });
 });
 
+router.put("/editComment", requireLogin, (req, res) => {
+  Post.updateOne(
+    { _id: req.body.postId, "comments._id": req.body.cID },
+    { $set: { "comments.$.text": req.body.editText } },
+    function (err, result) {
+      if (err) {
+        return res.status(500).send({
+          message: err.message || "Some error occured while updating user",
+        });
+      }
+      if (!result) {
+        return res.status(404).send({
+          message: "Message not found",
+        });
+      }
+
+      return res.status(200).send(result);
+    }
+  );
+});
+
+router.put("/deleteComment", requireLogin, (req, res) => {
+  Post.updateOne(
+    { _id: req.body.postId },
+    { $pull: { comments: { _id: req.body.cID } } },
+    { upsert: false, multi: true },
+    function (err, result) {
+      if (err) {
+        return res.status(500).send({
+          message: err.message || "Some error occured while updating user",
+        });
+      }
+      if (!result) {
+        return res.status(404).send({
+          message: "Message not found",
+        });
+      }
+
+      return res.status(200).send(result);
+    }
+  );
+});
+
 router.put("/comment", requireLogin, (req, res) => {
   const comment = {
     text: req.body.text,
