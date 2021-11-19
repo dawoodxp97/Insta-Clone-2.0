@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "./Modal";
 import { useStateValue } from "../context/StateProvider";
+import { Link } from "react-router-dom";
 
 toast.configure();
 
@@ -14,6 +15,7 @@ function Profile() {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [innerLoad, setInnerLoad] = useState(true);
   const [image, setImage] = useState();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,6 +43,7 @@ function Profile() {
       .then((result) => {
         if (isMount) {
           setMyposts(result.mypost);
+          setInnerLoad(false);
         }
       });
     return () => {
@@ -59,12 +62,12 @@ function Profile() {
       .then((res) => res.json())
       .then((result) => {
         //Post Deleted
-        setLoading(false);
-        successNotify("Post Deleted Successfully");
         dispatch({
           type: "SET_RELOAD",
           reload: Math.floor(Math.random() * 100 + 1),
         });
+        setLoading(false);
+        successNotify("Post Deleted Successfully");
       })
       .catch((err) => {
         warnNotify("Something Went Wrong");
@@ -182,8 +185,14 @@ function Profile() {
             <span>{`${followers.length} Followers`}</span>
             <span>{`${following.length} Following`}</span>
           </div>
-          <div className="profile_details3">Bio</div>
+          <div className="profile_details3"></div>
         </div>
+      </div>
+      <div>
+        <h3 className="user_posts_title">My Posts</h3>
+      </div>
+      <div className="inner_load">
+        <ClipLoader color="#fe5656" loading={innerLoad} size={50} />
       </div>
       <div className="profile_2">
         {mypost &&
@@ -191,17 +200,34 @@ function Profile() {
             <div key={item?._id} className="profile_posts">
               {item?.postedBy?._id ===
               JSON.parse(localStorage.getItem("user"))?._id ? (
-                <div
-                  onClick={() => {
-                    deletePost(item?._id);
-                  }}
-                  className="post_del"
-                >
-                  Delete
+                <div className="post_icons">
+                  <div
+                    onClick={() => {
+                      deletePost(item?._id);
+                    }}
+                    className="post_del"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    style={{ marginTop: "0.5rem", letterSpacing: "2px" }}
+                    className="post_del"
+                  >
+                    <Link
+                      style={{
+                        textDecoration: "none",
+                        color: "#ffffff",
+                      }}
+                      to={`/home/post/${item?._id}`}
+                    >
+                      View
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 ""
               )}
+
               <img src={item?.photo} alt={item?.message} />
             </div>
           ))}
