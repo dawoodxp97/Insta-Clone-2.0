@@ -4,27 +4,50 @@ import { BiSearchAlt } from "react-icons/bi";
 import { BiMicrophone } from "react-icons/bi";
 import { HiPlus } from "react-icons/hi";
 import { RiSendPlaneFill } from "react-icons/ri";
-import { RiNotification2Line } from "react-icons/ri";
 import { RiMoonLine } from "react-icons/ri";
+import { FiSun } from "react-icons/fi";
 import Modal from "./Modal";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useStateValue } from "../context/StateProvider";
-import { Link } from "react-router-dom";
 
 function Header() {
   const [{ searchData }, dispatch] = useStateValue();
   const [image, setImage] = useState();
+  const [isDark, setIsDark] = useState(false);
   const [msg, setMsg] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const inputElem = useRef();
+  const searchContent = document.getElementById("search-content");
   const [searchedItems, setSearchedItems] = useState([]);
+  const rootElem = document.querySelector(":root");
+
+  const switchTheme = (type) => {
+    if (type === "light") {
+      rootElem.style.setProperty("--bg-primary", "#ffffff");
+      rootElem.style.setProperty("--bg-secondary", "#fafafa");
+      rootElem.style.setProperty("--text-primary", "black");
+      rootElem.style.setProperty("--text-secondary", "#c6c6c6");
+      rootElem.style.setProperty("--box-shadow", "rgba(0, 0, 0, 0.24)");
+      rootElem.style.setProperty("--trend-bg", "#dbe9e2");
+      rootElem.style.setProperty("--trend-icon", "#3997ef");
+    } else if (type === "dark") {
+      rootElem.style.setProperty("--bg-primary", "#18191a");
+      rootElem.style.setProperty("--bg-secondary", "#282a36");
+      rootElem.style.setProperty("--text-primary", "white");
+      rootElem.style.setProperty("--text-secondary", "grey");
+      rootElem.style.setProperty("--box-shadow", "#4bf3cf");
+      rootElem.style.setProperty("--trend-bg", "#282a36");
+      rootElem.style.setProperty("--trend-icon", "#BA5535");
+    }
+  };
 
   const displaySearch = () => {
-    document.getElementById("search-content").style.display = "block";
+    searchContent.style.display = "block";
+    searchContent.tabIndex = "0";
   };
   const hideSearch = () => {
-    document.getElementById("search-content").style.display = "none";
+    searchContent.style.display = "none";
   };
 
   const getSearch = () => {
@@ -76,6 +99,7 @@ function Header() {
               });
               setMsg("");
               setLoading(false);
+              setImage();
             })
             .catch((err) => {
               setLoading(false);
@@ -118,7 +142,11 @@ function Header() {
                     type="file"
                   />
                 </label>
-                <input className="modal_submit" type="submit" />
+                <input
+                  disabled={!(msg && image)}
+                  className="modal_submit"
+                  type="submit"
+                />
               </form>
             </div>
           </div>
@@ -128,39 +156,38 @@ function Header() {
         <div className="header1_logo">
           <img src="https://i.ibb.co/bW6Rv8r/ins111.png" alt="" />
         </div>
-
-        <img
-          className="header1_img"
-          src="https://www.vectorlogo.zone/logos/instagram/instagram-wordmark.svg"
-          alt=""
-        />
       </div>
       <div className="header2">
         <div className="header2_child1">
           <div id="search-content" className="search_content">
             {searchedItems &&
               searchedItems?.map((item) => (
-                <Link
-                  style={{ textDecoration: "none", color: "black" }}
-                  to={
+                <div
+                  onClick={() => {
                     JSON.parse(localStorage.getItem("user"))?._id === item?._id
-                      ? `/home/profile`
-                      : `/home/userprofile/${item?._id}`
-                  }
+                      ? window.location.replace(`/home/profile`)
+                      : window.location.replace(
+                          `/home/userprofile/${item?._id}`
+                        );
+                  }}
+                  key={item?._id}
+                  className="search_item"
                 >
-                  <div key={item?._id} className="search_item">
-                    <p>{item?.name}</p>
-                    <span>{`@${item?.userName}`}</span>
-                  </div>
-                </Link>
+                  <p>{item?.name}</p>
+                  <span>{`@${item?.userName}`}</span>
+                </div>
               ))}
           </div>
-
           <BiSearchAlt style={{ color: "grey", marginLeft: "1rem" }} />
           <input
+            id="search-inp"
             ref={inputElem}
             onFocus={displaySearch}
-            onBlur={hideSearch}
+            onBlur={() => {
+              if (searchedItems.length === 0) {
+                hideSearch();
+              }
+            }}
             className="header2_search"
             type="text"
             placeholder="Search"
@@ -177,12 +204,22 @@ function Header() {
         <div className="header3_child1">
           <RiSendPlaneFill style={{ color: "grey" }} />
         </div>
-        <div className="header3_child2">
-          <RiNotification2Line style={{ color: "grey" }} />
-        </div>
         <div className="header3_child3">
-          {" "}
-          <RiMoonLine />{" "}
+          {isDark ? (
+            <FiSun
+              onClick={() => {
+                setIsDark(false);
+                switchTheme("light");
+              }}
+            />
+          ) : (
+            <RiMoonLine
+              onClick={() => {
+                setIsDark(true);
+                switchTheme("dark");
+              }}
+            />
+          )}
         </div>
       </div>
     </div>
