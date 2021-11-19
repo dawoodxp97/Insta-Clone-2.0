@@ -11,7 +11,7 @@
   width: 100%;
 }
 .comments > div > div {
-  height: 1rem;
+  height: 1.8rem;
   margin-top: 0.1rem;
   width: 100%;
   display: flex;
@@ -29,4 +29,7 @@
 .comment_delete_icon {
   cursor: pointer;
   margin-left: 1.2rem;
+}
+.edit_text {
+  height: 1rem;
 }
