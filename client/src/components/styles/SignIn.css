@@ -24,6 +24,7 @@
 .card_2 {
   flex: 0.5;
   display: flex;
+  justify-content: center;
   flex-direction: column;
 }
 .card_2_logo {
