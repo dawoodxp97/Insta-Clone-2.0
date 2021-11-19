@@ -9,12 +9,14 @@ import "./styles/Favorites.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import ClipLoader from "react-spinners/ClipLoader";
 
 toast.configure();
 
 function Favorites() {
   const [{ reload }, dispatch] = useStateValue();
   const [favData, setFavData] = useState([]);
+  const [innerLoad, setInnerLoad] = useState(true);
 
   const addToFav = (id) => {
     fetch("/addfav", {
@@ -84,6 +86,7 @@ function Favorites() {
       .then((res) => res.json())
       .then((result) => {
         setFavData(result?.user?.favorites);
+        setInnerLoad(false);
       })
       .catch((err) => {
         console.log(err);
@@ -98,9 +101,16 @@ function Favorites() {
     <div className="fav_container">
       <div className="fav_grp">
         <h2>Favorites</h2>
+        {favData.length === 0 ? (
+          <div className="in_load">
+            <ClipLoader color="#fe5656" loading={innerLoad} size={50} />
+          </div>
+        ) : (
+          ""
+        )}
         {favData &&
           favData.map((item) => (
-            <div key={item?._id} className="post">
+            <div key={item?._id} style={{ width: "80%" }} className="post">
               <Link
                 style={{
                   textDecoration: "none",
