@@ -181,6 +181,7 @@
 .post_body > p {
   padding-left: 3rem;
   width: 100%;
+  color: var(--text-primary);
 }
 .post_body > img {
   height: 15rem;
