@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import "./styles/Header.css";
 import { BiSearchAlt } from "react-icons/bi";
-import { BiMicrophone } from "react-icons/bi";
 import { HiPlus } from "react-icons/hi";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { RiMoonLine } from "react-icons/ri";
@@ -193,7 +192,7 @@ function Header() {
             placeholder="Search"
             onChange={getSearch}
           />
-          <BiMicrophone style={{ color: "grey", marginRight: "1rem" }} />
+          <div> </div>
         </div>
         <div onClick={() => setIsOpen(true)} className="header2_child2">
           <HiPlus />
@@ -201,9 +200,9 @@ function Header() {
         </div>
       </div>
       <div className="header3">
-        <div className="header3_child1">
-          <RiSendPlaneFill style={{ color: "grey" }} />
-        </div>
+//         <div className="header3_child1">
+//           <RiSendPlaneFill style={{ color: "grey" }} />
+//         </div>
         <div className="header3_child3">
           {isDark ? (
             <FiSun
