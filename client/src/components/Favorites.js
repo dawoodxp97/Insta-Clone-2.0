@@ -102,7 +102,16 @@ function Favorites() {
       <div className="fav_grp">
         <h2>Favorites</h2>
         {favData.length === 0 ? (
-          <div className="in_load">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              height: "90vh",
+              width: "80%",
+            }}
+          >
             <ClipLoader color="#fe5656" loading={innerLoad} size={50} />
           </div>
         ) : (
