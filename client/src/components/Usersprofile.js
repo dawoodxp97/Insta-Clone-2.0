@@ -118,7 +118,7 @@ function Profile() {
             <span>{`${followers.length} Followers`}</span>
             <span>{`${following.length} Following`}</span>
           </div>
-          <div className="profile_details3">Bio</div>
+          <div className="profile_details3"></div>
         </div>
       </div>
       <div>
