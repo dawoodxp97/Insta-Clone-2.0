@@ -2,22 +2,23 @@ import React, { useRef, useState } from "react";
 import "./styles/Header.css";
 import { BiSearchAlt } from "react-icons/bi";
 import { HiPlus } from "react-icons/hi";
-import { RiSendPlaneFill } from "react-icons/ri";
 import { RiMoonLine } from "react-icons/ri";
 import { FiSun } from "react-icons/fi";
 import Modal from "./Modal";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useStateValue } from "../context/StateProvider";
+import { useHistory } from "react-router";
 
 function Header() {
   const [{ searchData }, dispatch] = useStateValue();
+  const history = useHistory();
   const [image, setImage] = useState();
   const [isDark, setIsDark] = useState(false);
   const [msg, setMsg] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const inputElem = useRef();
-  const searchContent = document.getElementById("search-content");
   const [searchedItems, setSearchedItems] = useState([]);
   const rootElem = document.querySelector(":root");
 
@@ -39,14 +40,6 @@ function Header() {
       rootElem.style.setProperty("--trend-bg", "#282a36");
       rootElem.style.setProperty("--trend-icon", "#BA5535");
     }
-  };
-
-  const displaySearch = () => {
-    searchContent.style.display = "block";
-    searchContent.tabIndex = "0";
-  };
-  const hideSearch = () => {
-    searchContent.style.display = "none";
   };
 
   const getSearch = () => {
@@ -79,10 +72,10 @@ function Header() {
       .then((res) => res.json())
       .then((data) => {
         if (data?.secure_url) {
-          fetch("/createpost", {
+          fetch("/api/post", {
             method: "post",
             headers: {
-              Authorization: "Bearer " + localStorage.getItem("auth-token"),
+              Authorization: "Bearer " + localStorage.getItem("token"),
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -111,12 +104,49 @@ function Header() {
         console.log(err);
       });
   };
+
   return (
     <div id="head" className="header">
       {loading && (
         <div className="load">
           <ClipLoader color="#fe5656" loading={loading} size={120} />
         </div>
+      )}
+      {searchOpen && (
+        <Modal closeModal={() => setSearchOpen(false)}>
+          <div>
+            <input
+              id="search-inp"
+              ref={inputElem}
+              className="header2_search"
+              type="text"
+              placeholder="Search"
+              onChange={getSearch}
+            />
+            <div id="search-content" className="search_content">
+              {searchedItems &&
+                searchedItems?.map((item) => (
+                  <div
+                    onClick={() => {
+                      history.replace(
+                        JSON.parse(localStorage.getItem("user"))?._id ===
+                          item?._id
+                          ? `/profile`
+                          : `/userprofile/${item?._id}`
+                      );
+                      setSearchOpen(false);
+                      setSearchedItems([]);
+                    }}
+                    key={item?._id}
+                    className="search_item"
+                  >
+                    <p>{item?.name}</p>
+                    <span>{`@${item?.userName}`}</span>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </Modal>
       )}
       {isOpen && (
         <Modal closeModal={() => setIsOpen(false)}>
@@ -134,7 +164,9 @@ function Header() {
                   name="msg"
                 />
                 <label className="upload_btn">
-                  {!image ? "Upload Image" : `Selected: ${image.name}`}
+                  {!image
+                    ? "Upload Image"
+                    : `Selected: ${image.name.substring(0, 7)}...`}
                   <input
                     onChange={(e) => setImage(e.target.files[0])}
                     className="modal_file"
@@ -157,42 +189,9 @@ function Header() {
         </div>
       </div>
       <div className="header2">
-        <div className="header2_child1">
-          <div id="search-content" className="search_content">
-            {searchedItems &&
-              searchedItems?.map((item) => (
-                <div
-                  onClick={() => {
-                    JSON.parse(localStorage.getItem("user"))?._id === item?._id
-                      ? window.location.replace(`/home/profile`)
-                      : window.location.replace(
-                          `/home/userprofile/${item?._id}`
-                        );
-                  }}
-                  key={item?._id}
-                  className="search_item"
-                >
-                  <p>{item?.name}</p>
-                  <span>{`@${item?.userName}`}</span>
-                </div>
-              ))}
-          </div>
+        <div onClick={() => setSearchOpen(true)} className="header2_child1">
           <BiSearchAlt style={{ color: "grey", marginLeft: "1rem" }} />
-          <input
-            id="search-inp"
-            ref={inputElem}
-            onFocus={displaySearch}
-            onBlur={() => {
-              if (searchedItems.length === 0) {
-                hideSearch();
-              }
-            }}
-            className="header2_search"
-            type="text"
-            placeholder="Search"
-            onChange={getSearch}
-          />
-          <div> </div>
+          <span>Search...</span>
         </div>
         <div onClick={() => setIsOpen(true)} className="header2_child2">
           <HiPlus />
@@ -200,9 +199,9 @@ function Header() {
         </div>
       </div>
       <div className="header3">
-//         <div className="header3_child1">
-//           <RiSendPlaneFill style={{ color: "grey" }} />
-//         </div>
+        {/* <div className="header3_child1">
+          <RiSendPlaneFill style={{ color: "grey" }} />
+        </div> */}
         <div className="header3_child3">
           {isDark ? (
             <FiSun
