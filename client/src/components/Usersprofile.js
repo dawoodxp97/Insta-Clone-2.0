@@ -3,10 +3,15 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useStateValue } from "../context/StateProvider";
 import ClipLoader from "react-spinners/ClipLoader";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function Profile() {
+toast.configure();
+
+function Usersprofile() {
   const { userID } = useParams();
-  const [{ reload }, dispatch] = useStateValue();
+  const [, dispatch] = useStateValue();
   const [actuser, setActuser] = useState({});
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
@@ -14,29 +19,28 @@ function Profile() {
   const [innerLoad, setInnerLoad] = useState(true);
   const [showFollow, setShowFollow] = useState();
   useEffect(() => {
-    let isMount = true;
-    fetch(`/user/${userID}`, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("auth-token"),
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (isMount) {
-          setMyposts(result.posts);
-          setActuser(result.user);
-          setFollowers(result.user.followers);
-          setFollowing(result.user.following);
-          setInnerLoad(false);
-        }
-      });
-    return () => {
-      isMount = false;
-    };
+    fetchUserDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID, reload]);
+  }, [userID]);
+  const errorNotify = (text) => {
+    toast.error(text, { autoClose: 1500 });
+  };
 
+  const fetchUserDetails = async () => {
+    if (localStorage.getItem("token")) {
+      try {
+        const { data } = await axios.get(`/api/user/${userID}`);
+        setActuser(data.user);
+        setMyposts(data.userPosts);
+        setFollowers(data.user.followers);
+        setFollowing(data.user.following);
+        setInnerLoad(false);
+      } catch (error) {
+        errorNotify(error.message);
+        setInnerLoad(false);
+      }
+    }
+  };
   useEffect(() => {
     if (followers.includes(JSON.parse(localStorage.getItem("user"))?._id)) {
       setShowFollow(false);
@@ -46,11 +50,11 @@ function Profile() {
       setShowFollow(true);
     }
   }, [followers, userID]);
-  const followUser = () => {
-    fetch("/follow", {
-      method: "put",
+  const followUser = async () => {
+    fetch("/api/user", {
+      method: "post",
       headers: {
-        Authorization: "Bearer " + localStorage.getItem("auth-token"),
+        Authorization: "Bearer " + localStorage.getItem("token"),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -58,33 +62,37 @@ function Profile() {
       }),
     })
       .then((res) => res.json())
-      .then((result) => {
-        setShowFollow(false);
+      .then((data) => {
+        setFollowers((followers) => {
+          return (followers = data.followers);
+        });
         dispatch({
-          type: "SET_RELOAD",
-          reload: Math.floor(Math.random() * 100 + 1),
+          type: "SET_FOLLOWINGS",
+          following: data.following,
         });
       })
       .catch((err) => console.log(err));
   };
 
   const unfollowUser = () => {
-    fetch("/unfollow", {
-      method: "put",
+    fetch("/api/user", {
+      method: "delete",
       headers: {
-        Authorization: "Bearer " + localStorage.getItem("auth-token"),
+        Authorization: "Bearer " + localStorage.getItem("token"),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        unfollowID: userID,
+        followID: userID,
       }),
     })
       .then((res) => res.json())
-      .then((result) => {
-        setShowFollow(true);
+      .then((data) => {
+        setFollowers((followers) => {
+          return (followers = data.followers);
+        });
         dispatch({
-          type: "SET_RELOAD",
-          reload: Math.floor(Math.random() * 100 + 1),
+          type: "SET_FOLLOWINGS",
+          following: data.following,
         });
       })
       .catch((err) => console.log(err));
@@ -132,7 +140,7 @@ function Profile() {
                 textDecoration: "none",
                 color: "#121212",
               }}
-              to={`/home/post/${item?._id}`}
+              to={`/postDetails/${item?._id}`}
             >
               <div key={item?._id} className="profile_posts">
                 <img src={item?.photo} alt={item?.message} />
@@ -144,4 +152,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default Usersprofile;
