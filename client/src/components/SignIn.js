@@ -4,6 +4,7 @@ import "./styles/SignIn.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 toast.configure();
 
@@ -16,44 +17,36 @@ function SignIn() {
   const successNotify = () => {
     toast.success("Signedin Successfully", { autoClose: 1500 });
   };
-  const warnNotify = () => {
-    toast.warn("Something went wrong", { autoClose: 1500 });
+  const warnNotify = (text) => {
+    toast.warn(text, { autoClose: 1500 });
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoading(true);
-    if (email) {
-      fetch("/signin", {
-        method: "post",
+    if (!email || !password) {
+      setLoading(false);
+      warnNotify("Please Fill all the Feilds");
+      return;
+    }
+    try {
+      const config = {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      })
-        .then(async (response) => {
-          try {
-            const data = await response.json();
-            setEmail("");
-            setPassword("");
-            localStorage.setItem("auth-token", data?.token);
-            localStorage.setItem("user", JSON.stringify(data?.user));
-            setLoading(false);
-            successNotify();
-            history.push("/home");
-          } catch (error) {
-            setLoading(false);
-            console.log("Error happened here!");
-            console.error(error);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          console.log(err);
-          warnNotify();
-        });
+      };
+      const { data } = await axios.post(
+        "/api/user/login",
+        { email, password },
+        config
+      );
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+      setLoading(false);
+      successNotify();
+      history.push("/home");
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   };
 
