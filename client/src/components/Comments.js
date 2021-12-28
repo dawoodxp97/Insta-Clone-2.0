@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "./styles/Comments.css";
 import { MdDelete } from "react-icons/md";
@@ -6,73 +7,64 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EditText } from "react-edit-text";
 import "react-edit-text/dist/index.css";
+import axios from "axios";
 
 toast.configure();
 
 function Comments({ comments, postId }) {
   const [, dispatch] = useStateValue();
   const [editText, setEditText] = useState("");
-
   const user = JSON.parse(localStorage.getItem("user"));
   const successNotify = (text) => {
     toast.success(text, { autoClose: 1500 });
   };
-  const warnNotify = (text) => {
-    toast.warn(text);
+  const errorNotify = (text) => {
+    toast.error(text, { autoClose: 1500 });
   };
 
-  const editComment = (value, id) => {
-    fetch("/editComment", {
-      method: "put",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("auth-token"),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        postId,
-        cID: id,
-        editText: value,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        //Comment Added
-        dispatch({
-          type: "SET_RELOAD",
-          reload: Math.floor(Math.random() * 100 + 1),
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        warnNotify("Something went wrong");
+  const editComment = async (value, id) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.put(
+        `/api/post/${postId}/${id}`,
+        {
+          editText: value,
+        },
+        config
+      );
+      dispatch({
+        type: "SET_COMMENTS",
+        _id: postId,
+        comments: data.comments,
       });
+    } catch (error) {
+      errorNotify("Something went wrong, unable to Edit the Comment.");
+    }
   };
 
-  const deleteComment = (id) => {
-    fetch("/deleteComment", {
-      method: "put",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("auth-token"),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        postId,
-        cID: id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        //Comment Added
-        dispatch({
-          type: "SET_RELOAD",
-          reload: Math.floor(Math.random() * 100 + 1),
-        });
-        successNotify("Comment Deleted");
-      })
-      .catch((err) => {
-        console.log(err);
-        warnNotify("Something went wrong");
+  const deleteComment = async (id) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.delete(`/api/post/${postId}/${id}`, config);
+      dispatch({
+        type: "SET_COMMENTS",
+        _id: postId,
+        comments: data.comments,
       });
+      successNotify("Comment Deleted");
+    } catch (error) {
+      errorNotify("Something went wrong, unable to delete the Comment");
+    }
   };
   return (
     <div className="comments">
@@ -80,7 +72,7 @@ function Comments({ comments, postId }) {
       <div>
         {comments?.map((c_item) => (
           <div key={c_item?._id}>
-            {c_item?.postedBy === user?._id ? (
+            {c_item?.postedBy._id === user?._id ? (
               <div
                 style={{
                   width: "40rem",
@@ -95,7 +87,7 @@ function Comments({ comments, postId }) {
                     marginBottom: "0.6rem",
                   }}
                 >
-                  <strong> {`${c_item?.c_name}:`} </strong>
+                  <strong> {`${c_item?.postedBy.name}:`} </strong>
                 </p>
                 <EditText
                   style={{ height: "0.5rem" }}
@@ -111,11 +103,11 @@ function Comments({ comments, postId }) {
               </div>
             ) : (
               <p>
-                <strong> {`${c_item?.c_name}:`} </strong> {c_item?.text}
+                <strong> {`${c_item?.postedBy.name}:`} </strong> {c_item?.text}
               </p>
             )}
             <div>
-              {c_item?.postedBy === user?._id ? (
+              {c_item?.postedBy._id === user?._id ? (
                 <MdDelete
                   onClick={() => {
                     deleteComment(c_item?._id);
