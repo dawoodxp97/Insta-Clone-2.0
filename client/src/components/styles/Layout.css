@@ -1,0 +1,25 @@
+.layout {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header_grp {
+  flex: 0.1;
+}
+.main_grp {
+  flex: 0.9;
+  display: flex;
+  flex-direction: row;
+}
+.left_sidebar_grp {
+  flex: 0.2;
+  height: 100%;
+}
+.main_content_grp {
+  flex: 0.8;
+  background-color: var(--bg-secondary);
+}
+.right_sidebar_grp {
+  flex: 0.2;
+}

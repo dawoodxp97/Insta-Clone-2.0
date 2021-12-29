@@ -1,0 +1,15 @@
+.feed_content {
+  padding-top: 2rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+.posts {
+  padding-top: 2rem;
+  padding-right: 7rem;
+  padding-left: 7rem;
+  overflow-y: scroll;
+  height: 80vh;
+}
+.posts > h4 {
+  color: var(--text-primary);
+}

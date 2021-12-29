@@ -1,0 +1,110 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-top: 2px solid var(--bg-secondary);
+}
+.sidebar1 {
+  flex: 0.3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.sidebar2 {
+  flex: 0.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  color: var(--text-secondary);
+}
+
+.sidebar3 {
+  flex: 0.1;
+  border-top: 1.5px solid #c6c6c6;
+  display: flex;
+  color: var(--text-secondary);
+  align-items: center;
+}
+.sidebar1_child1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sidebar1_child1 > img {
+  height: 5rem;
+  width: 5rem;
+  border-radius: 50%;
+  border: 3px solid #e6653c;
+}
+.sidebar1_child1 > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.sidebar1_child1 > div > p {
+  color: var(--text-primary);
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.sidebar1_child1 > div > span {
+  color: var(--text-secondary);
+  font-size: small;
+}
+
+.sidebar1_child2 {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+.sidebar1_child2 > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar1_child2 > div > p {
+  color: var(--text-primary);
+  font-weight: bold;
+}
+.sidebar1_child2 > div > span {
+  color: var(--text-secondary);
+  font-size: small;
+}
+
+.nav {
+  height: 5rem;
+  width: 75%;
+  display: flex;
+  padding-left: 4rem;
+  align-items: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+.nav_active {
+  color: #fe456e;
+  background-color: var(--bg-secondary);
+}
+
+.icon {
+  margin-right: 1rem;
+  font-size: large;
+}
+
+.sidebar3 > div {
+  color: var(--text-secondary);
+  display: flex;
+  margin-left: 4rem;
+  align-items: center;
+  cursor: pointer;
+}
+.sidebar3 > div > span {
+  font-weight: bold;
+  letter-spacing: 1px;
+}

@@ -1,0 +1,42 @@
+.trending_user {
+  margin-top: 1rem;
+  height: 2.5rem;
+  width: 98%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 0.5rem;
+  background-color: var(--trend-bg);
+  font-weight: 500;
+}
+.trending_user > img {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+}
+.trending_user_follow {
+  padding: 1px;
+  height: 1rem;
+  font-size: smaller;
+  width: 3rem;
+  background-color: var(--trend-icon);
+  border-radius: 0.3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.trending_feeds {
+  flex: 0.2;
+  overflow-y: scroll;
+  margin-left: 0.4rem;
+  color: var(--text-primary);
+}
+.trending_feeds > p {
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-left: 3rem;
+}
