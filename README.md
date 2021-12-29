@@ -65,11 +65,28 @@ Password: test123
 <br>
   <h2> Homepage </h2>
 
-  <img src="https://user-images.githubusercontent.com/77268355/136896599-45ca24cb-ee41-468e-ade3-5537a2897c7b.png" />
+  <img src="https://user-images.githubusercontent.com/77268355/147629556-40587f27-932d-4754-8826-178fac9ded88.png" />
 <br>
     <h2> Profile View </h2>
 
-  <img src="https://user-images.githubusercontent.com/77268355/136896648-7d2b8018-2bed-498e-ba7c-910f1199c1ef.png" />
+  <img src="https://user-images.githubusercontent.com/77268355/147629581-a3245cb1-1df4-4138-85a5-afaba7271684.png" />
+<br>
+     <h2> Create Post View </h2>
+
+  <img src="https://user-images.githubusercontent.com/77268355/147629651-1e765704-becd-40d2-a0c6-f54e72fb972f.png" />
+
+<br>
+     <h2> Favorites View </h2>
+
+  <img src="https://user-images.githubusercontent.com/77268355/147629677-abe3d9cd-4668-4b9b-8c21-92063f3bff0b.png" />
+<br>
+     <h2> Post Details View </h2>
+
+  <img src="https://user-images.githubusercontent.com/77268355/147629688-d93c7477-2f09-4554-bfc0-6ca9d0a0d283.png" />
+<br>
+     <h2> Search Users View </h2>
+
+  <img src="https://user-images.githubusercontent.com/77268355/147629710-77717b09-58ac-4f63-8df9-65fff887e025.png" />
 <br>
   <h5>The Design was inspired from Dribble.com</h5>
   <h4>Made with ❤️ by Shaik Dawood</h4>
