@@ -2,20 +2,19 @@
 const express = require("express");
 const path = require("path");
 const connectDB = require("./config/db");
-const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
+const { errorHandler } = require("./middlewares/errorMiddleware");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 
 // Cofig
 connectDB();
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 // Middlewares
 app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
-// app.use(notFound);
 app.use(errorHandler);
 
 // --------------------------deployment------------------------------
