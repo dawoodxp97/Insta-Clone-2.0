@@ -34,3 +34,31 @@
 .edit_text {
   height: 1rem;
 }
+
+@media (max-width: 768px) {
+  .comments > h4 {
+    display: none;
+  }
+  .comments > div > div > div > p {
+    height: 1.2rem;
+    max-height: 5rem;
+    width: 100%;
+    font-size: smaller;
+  }
+  .comments > div > div > p {
+    height: 1.2rem;
+    max-height: 5rem;
+    width: 100%;
+    font-size: smaller;
+  }
+}
+@media (max-width: 420px) {
+  .comments > div {
+    margin-left: 0;
+  }
+  .comments > div > div {
+    height: 3rem;
+    margin-top: 1rem;
+    width: 85vw;
+  }
+}
