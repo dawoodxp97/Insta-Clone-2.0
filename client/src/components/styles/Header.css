@@ -95,15 +95,16 @@
 
 .header1_logo {
   height: 3.2rem;
-  width: 5.8rem;
+  width: 10rem;
   border-radius: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.header1_logo > img {
+.head_ins_logo {
   height: 100%;
   width: 100%;
+  border-radius: 1rem;
 }
 
 .header3 {
@@ -209,4 +210,60 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .header1_logo {
+    display: none;
+  }
+  .header2_child1 > span {
+    margin-left: 0.5rem;
+  }
+  .post_inp {
+    height: 5rem;
+    width: 100%;
+  }
+  .create_post_grp > h1 {
+    font-size: smaller;
+  }
+  .header2_child1 {
+    position: inherit;
+  }
+}
+@media (max-width: 620px) {
+  .post_inp {
+    height: 4rem;
+    width: 80%;
+    margin-left: 2rem;
+  }
+  .header2_child2 {
+    margin-left: 1rem;
+  }
+}
+@media (max-width: 420px) {
+  .header2_child2 {
+    height: 2rem;
+    width: 5rem;
+  }
+  .header2_child2 > p {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 376px) {
+  .header2_child2 {
+    height: 1rem;
+    width: 4rem;
+  }
+  .header2_child2 > p {
+    font-size: 4px;
+  }
+  .create_post > form {
+    width: 50vw;
+  }
+  .post_inp {
+    height: 4rem;
+    width: 100%;
+    margin-left: 0;
+  }
 }
