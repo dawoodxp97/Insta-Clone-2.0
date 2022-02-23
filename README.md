@@ -1,9 +1,10 @@
 <div align="center">
-  <img src="https://i.ibb.co/bW6Rv8r/ins111.png" width="40%" />
+  <img src="https://user-images.githubusercontent.com/77268355/155337502-848d4331-3db6-4c88-a16c-7fa414aee63b.png" width="40%" />
 
 
-  <h1> Instagram Clone Application</h1>
-Instagram Clone Application is a Full Stack Social Media Application (MERN) with complete functionality.
+
+  <h1> Insta-Buzz</h1>
+Insta-Buzz is a Full Stack Social Media Application (MERN) with complete functionality.
   <br>
 
   <a href="https://ins-skd.herokuapp.com/"> Live Demo </a>
@@ -43,50 +44,54 @@ Password: test123
 - Search Users.
 - Edit and Delete Comment in post.
 - Dark Theme
+- Mobile Responsive UI.
 
 
 <br>
 
 # Upcoming Features:
-- Responsive UI.
 - Add Bio for user.
-- DM Feature.
+- DM Feature.(WIP)
 - Insta Stories using Zuck.js
 
 <br>
 <div align="center">
   <h2> Login </h2>
-  
-  <img src="https://user-images.githubusercontent.com/77268355/136896518-98069d9b-469a-459c-9e91-1855c0585628.png" />
+ 
+  <img src="https://user-images.githubusercontent.com/77268355/155337844-1582d7bb-3aac-4992-a67d-43e50ed0704a.png" />
 <br>
   <h2> SignUp </h2>
-  
-  <img src="https://user-images.githubusercontent.com/77268355/136896547-6667d2c6-eb15-4a8f-9cce-e6c0774af44a.png" />
+
+  <img src="https://user-images.githubusercontent.com/77268355/155337923-c3629c0c-fd5c-4e40-acf7-835182ce1c57.png" />
 <br>
   <h2> Homepage </h2>
 
-  <img src="https://user-images.githubusercontent.com/77268355/147629556-40587f27-932d-4754-8826-178fac9ded88.png" />
+  <img src="https://user-images.githubusercontent.com/77268355/155337979-5b559c10-bb4f-4acb-8af6-7cb747c13188.png" />
+  
+  <br>
+  <img src="https://user-images.githubusercontent.com/77268355/155338101-09dbb6a0-505a-4629-a140-9ee646ee951a.png" />
+
 <br>
     <h2> Profile View </h2>
-
-  <img src="https://user-images.githubusercontent.com/77268355/147629581-a3245cb1-1df4-4138-85a5-afaba7271684.png" />
+  
+  <img src="https://user-images.githubusercontent.com/77268355/155338184-d0ec6d91-fb68-4cd6-835c-444372635780.png" />
 <br>
      <h2> Create Post View </h2>
 
-  <img src="https://user-images.githubusercontent.com/77268355/147629651-1e765704-becd-40d2-a0c6-f54e72fb972f.png" />
+  <img src="https://user-images.githubusercontent.com/77268355/155338242-84fe6e79-0e80-41b0-8af1-0987746c5cf8.png" />
 
 <br>
      <h2> Favorites View </h2>
 
-  <img src="https://user-images.githubusercontent.com/77268355/147629677-abe3d9cd-4668-4b9b-8c21-92063f3bff0b.png" />
+  <img src="https://user-images.githubusercontent.com/77268355/155338329-22b58e5d-69b4-428d-90bb-ae696944054a.png" />
 <br>
      <h2> Post Details View </h2>
 
-  <img src="https://user-images.githubusercontent.com/77268355/147629688-d93c7477-2f09-4554-bfc0-6ca9d0a0d283.png" />
+  <img src="https://user-images.githubusercontent.com/77268355/155338395-4cd3085d-ccd5-4564-9211-dab4f99cb384.png" />
 <br>
      <h2> Search Users View </h2>
 
-  <img src="https://user-images.githubusercontent.com/77268355/147629710-77717b09-58ac-4f63-8df9-65fff887e025.png" />
+  <img src="https://user-images.githubusercontent.com/77268355/155338445-372a0800-f844-4225-bbc8-69354e6681bb.png" />
 <br>
   <h5>The Design was inspired from Dribble.com</h5>
   <h4>Made with ❤️ by Shaik Dawood</h4>
