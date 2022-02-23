@@ -46,6 +46,7 @@ function Layout({ children }) {
       }
     }
   };
+
   const fetchPosts = async () => {
     if (localStorage.getItem("token")) {
       try {
