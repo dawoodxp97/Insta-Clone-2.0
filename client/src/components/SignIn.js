@@ -56,77 +56,92 @@ function SignIn() {
   };
   return (
     <div className="signin">
-      {loading && (
-        <div className="load">
-          <ClipLoader color="#fe5656" loading={loading} size={120} />
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            height: "55vh",
+            width: "100%",
+            color: "#161d25",
+          }}
+        >
+          <ClipLoader color="#161d25" loading={loading} size={30} />
+          <p>Loading</p>
         </div>
-      )}
-      <div className="signin_card">
-        <div className="card_1">
-          <img
-            src="https://cdni.iconscout.com/illustration/premium/thumb/account-log-in-4268411-3551758.png"
-            alt=""
-          />
-        </div>
-        <div className="card_2">
-          <div className="card_2_logo">
-            <img src="https://i.ibb.co/bW6Rv8r/ins111.png" alt="" />
-            <img src="https://i.ibb.co/Cz1sBp5/Instagram-name-PNG.png" alt="" />
+      ) : (
+        <div className="signin_card">
+          <div className="card_1">
+            <img
+              src="https://cdni.iconscout.com/illustration/premium/thumb/account-log-in-4268411-3551758.png"
+              alt=""
+            />
           </div>
-          <div className="card_2_form">
-            <form onSubmit={handleSubmit}>
-              <h1>Login</h1>
+          <div className="card_2">
+            <div className="card_2_logo">
+              <img
+                className="main_logo"
+                src="https://res.cloudinary.com/skdtech/image/upload/v1645601951/ins_logo_zbll70.png"
+                alt=""
+              />
+            </div>
+            <div className="card_2_form">
+              <form onSubmit={handleSubmit}>
+                <h1>Login</h1>
 
-              <label>
-                Email:
-                <input
-                  className="form_input"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value.trimStart())}
-                  required
-                />
-              </label>
+                <label>
+                  Email:
+                  <input
+                    className="form_input"
+                    name="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value.trimStart())}
+                    required
+                  />
+                </label>
 
-              <label>
-                Password:
-                <input
-                  className="form_input"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value.trimStart())}
-                  required
-                />
-              </label>
-              <button>Submit</button>
-              <p>
-                Don't have account ?{" "}
-                <Link
-                  to="/register"
-                  style={{
-                    textDecoration: "none",
-                    color: "#830B4F",
+                <label>
+                  Password:
+                  <input
+                    className="form_input"
+                    name="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value.trimStart())}
+                    required
+                  />
+                </label>
+                <button>Submit</button>
+                <p className="signup_p">
+                  Don't have account ?{" "}
+                  <Link
+                    to="/register"
+                    style={{
+                      textDecoration: "none",
+                      color: "#830B4F",
+                    }}
+                  >
+                    {" "}
+                    Sign Up
+                  </Link>
+                </p>
+                <button
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setEmail("tester1234@test.com");
+                    setPassword("testing_user@12345");
                   }}
                 >
-                  {" "}
-                  Sign Up
-                </Link>
-              </p>
-              <button
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setEmail("tester1234@test.com");
-                  setPassword("testing_user@12345");
-                }}
-              >
-                Guest Login
-              </button>
-            </form>
+                  Guest Login
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
