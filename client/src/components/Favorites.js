@@ -27,7 +27,7 @@ function Favorites() {
         </div>
       ) : (
         <div className="favs">
-          <div className="profile_2">
+          <div className="fav_main">
             {userDetails.favorites &&
               userDetails.favorites.map((item) => (
                 <Link
@@ -37,8 +37,12 @@ function Favorites() {
                   }}
                   to={`/postDetails/${item?._id}`}
                 >
-                  <div key={item?._id} className="profile_posts">
-                    <img src={item?.photo} alt={item?.message} />
+                  <div key={item?._id} className="fav_img_grp">
+                    <img
+                      className="fav_img"
+                      src={item?.photo}
+                      alt={item?.message}
+                    />
                   </div>
                 </Link>
               ))}
