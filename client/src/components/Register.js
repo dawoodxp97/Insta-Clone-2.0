@@ -4,6 +4,7 @@ import "./styles/Register.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
+import axios from "axios";
 
 toast.configure();
 
@@ -39,22 +40,19 @@ function Register() {
       });
   };
 
-  const uploadUser = (url) => {
-    fetch("/signup", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        userName,
-        email,
-        password,
-        pic: url,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
+  const uploadUser = async (url) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "/api/user/register",
+        { email, password, name, userName, pic: url },
+        config
+      );
+      if (data) {
         setName("");
         setUserName("");
         setEmail("");
@@ -62,11 +60,11 @@ function Register() {
         setLoading(false);
         successNotify();
         history.push("/");
-      })
-      .catch((err) => {
-        setLoading(false);
-        warnNotify();
-      });
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   const successNotify = () => {
@@ -101,8 +99,11 @@ function Register() {
         </div>
         <div className="card_2">
           <div className="card_2_logo">
-            <img src="https://i.ibb.co/bW6Rv8r/ins111.png" alt="" />
-            <img src="https://i.ibb.co/Cz1sBp5/Instagram-name-PNG.png" alt="" />
+            <img
+              className="main_logo"
+              src="https://res.cloudinary.com/skdtech/image/upload/v1645601951/ins_logo_zbll70.png"
+              alt=""
+            />
           </div>
           <div className="card_2_form">
             <form onSubmit={handleSubmit}>
