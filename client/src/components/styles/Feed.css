@@ -13,3 +13,14 @@
 .posts > h4 {
   color: var(--text-primary);
 }
+
+@media (max-width: 768px) {
+  .posts {
+    padding: 0;
+  }
+}
+@media (max-width: 420px) {
+  .feed_content {
+    padding: 2px;
+  }
+}
