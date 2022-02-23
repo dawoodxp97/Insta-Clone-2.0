@@ -128,3 +128,15 @@
   transition-duration: 800ms;
   background-color: var(--bg-secondary);
 }
+
+@media (max-width: 420px) {
+  .post_footer {
+    font-size: small;
+  }
+  .unlike_icon {
+    font-size: 1.1rem;
+  }
+  .like_icon {
+    font-size: 1.1rem;
+  }
+}
