@@ -40,3 +40,8 @@
   right: 0.5rem;
   border-radius: 20%;
 }
+@media (max-width: 768px) {
+  .modal_content {
+    width: 76vw;
+  }
+}
