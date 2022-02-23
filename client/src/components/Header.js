@@ -8,6 +8,7 @@ import Modal from "./Modal";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useStateValue } from "../context/StateProvider";
 import { useHistory } from "react-router";
+import Hamburger from "./miscellaneous/Hamburger";
 
 function Header() {
   const [{ searchData }, dispatch] = useStateValue();
@@ -184,8 +185,15 @@ function Header() {
         </Modal>
       )}
       <div className="header1">
+        <div className="hamburger">
+          <Hamburger />
+        </div>
         <div className="header1_logo">
-          <img src="https://i.ibb.co/bW6Rv8r/ins111.png" alt="" />
+          <img
+            className="head_ins_logo"
+            src="https://res.cloudinary.com/skdtech/image/upload/v1645601951/ins_logo_zbll70.png"
+            alt=""
+          />
         </div>
       </div>
       <div className="header2">
