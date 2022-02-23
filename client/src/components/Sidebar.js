@@ -69,15 +69,6 @@ function Sidebar() {
             <BsBookmark className="icon" /> <span>Favorites</span>{" "}
           </div>
         </Link>
-        {/* <Link
-              style={{ textDecoration: "none", color: "#c6c6c6" }}
-              to="/home/direct"
-            >
-              <div className="nav">
-                {" "}
-                <FiSend className="icon" /> <span>Direct</span>{" "}
-              </div>
-            </Link> */}
       </div>
       <div className="sidebar3">
         <div
