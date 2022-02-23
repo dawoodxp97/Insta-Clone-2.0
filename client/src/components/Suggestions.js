@@ -4,6 +4,7 @@ import "./styles/Suggestions.css";
 
 function Suggestions() {
   const [{ searchData, userDetails }, dispatch] = useStateValue();
+
   const [users, setUsers] = useState([]);
   useEffect(() => {
     if (userDetails?._id) {
