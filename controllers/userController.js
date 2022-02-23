@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const { json } = require("express/lib/response");
 const generateToken = require("../config/generateToken");
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
@@ -155,7 +154,7 @@ const editProfile = asyncHandler(async (req, res) => {
 //@access          Protected
 const getAllUsers = asyncHandler(async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
     res.json({ users });
   } catch (error) {
     res.status(400);
